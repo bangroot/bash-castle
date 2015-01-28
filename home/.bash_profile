@@ -27,8 +27,12 @@ function startMongo() {
   docker start router1
 }
 
-function startEclim() {
-  /Applications/eclipse/eclimd 1>~/.eclim/log.out 2>&1 &
+function startEclim23() {
+  /Applications/eclipse/eclimd -b -f ~/.eclim/eclim-groovy-2.3.rc
+}
+
+function startEclim21() {
+  /Applications/eclipse/eclimd -b -f ~/.eclim/eclim-groovy-2.1.rc
 }
 
 if [ -f ~/.bash.local ]; then
