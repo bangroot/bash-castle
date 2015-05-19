@@ -50,6 +50,8 @@ alias ld="ls -ld"
 alias ll="ls -l"
 alias lt='ls -At1 && echo "------Oldest--"'
 alias ltr='ls -Art1 && echo "------Newest--"'
+#https://gist.github.com/dougalcorn/7815725
+alias open_ports="for port in `netstat -p tcp -na|grep '*.\d' | awk '{print $4}' | cut -f2 -d. `; do sudo lsof -P -i tcp | grep -i tcp | grep \":\$port \"; done" 
 # mute the system volume
 alias stfu="osascript -e 'set volume output muted true'"
 export DOCKER_HOST=tcp://192.168.59.103:2375
