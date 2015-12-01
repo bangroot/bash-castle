@@ -21,6 +21,15 @@ if [[ $platform == "darwin" ]]; then
 		export JAVA_HOME=`/usr/libexec/java_home -v $@`
 		export PATH=$JAVA_HOME/bin:$PATH
 	fi
+elif [[ $platform == "cygwin" ]]; then
+	if [ $# -ne 0 ]; then
+		removeFromPath '/cygdrive/c/ProgramData/Oracle/Java/javapath'
+		if [ -n "${JAVA_HOME+x}" ]; then
+			removeFromPath $JAVA_HOME
+		fi
+		export JAVA_HOME="/cygdrive/c/Program\ Files/Java/$(ls /cygrdrive/c/Program\ Files/Java | grep jdk$@ | sort -rV | head -1)"
+		export PATH=$JAVA_HOME/bin:$PATH
+	fi
 fi
 }
 
