@@ -13,6 +13,18 @@ function removeFromPath() {
   export PATH=$(echo $PATH | sed -E -e "s;:$1;;" -e "s;$1:?;;")
 }
 
+function startMarathon() {
+	launchctl start mesos-master 
+	launchctl start mesos-slave 
+	launchctl start marathon
+}
+
+function stopMarathon() {
+	launchctl stop marathon
+	launchctl stop mesos-slave 
+	launchctl stop mesos-master 
+}
+
 function dockerInit() {
   boot2docker start
   sudo sh -c 'echo "nameserver 172.17.42.1" >> /etc/resolv.conf' 
@@ -55,7 +67,7 @@ alias open_ports="for port in `netstat -p tcp -na|grep '*.\d' | awk '{print $4}'
 # mute the system volume
 alias stfu="osascript -e 'set volume output muted true'"
 export DOCKER_HOST=tcp://192.168.59.103:2375
-
+export KUBERNETES_PROVIDER=vagrant
 
 function parse_git_dirty {
   [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]] && echo "*"
@@ -72,5 +84,6 @@ source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
-[[ -s "/Users/e026391/.gvm/bin/gvm-init.sh" ]] && source "/Users/e026391/.gvm/bin/gvm-init.sh"
+export SDKMAN_DIR="/Users/e026391/.sdkman" && source "/Users/e026391/.sdkman/bin/sdkman-init.sh"
+#[[ -s "/Users/e026391/.gvm/bin/gvm-init.sh" ]] && source "/Users/e026391/.gvm/bin/gvm-init.sh"
 export PATH=/usr/local/sbin:$PATH:~/bin
