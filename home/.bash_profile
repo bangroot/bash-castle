@@ -27,7 +27,7 @@ elif [[ $platform == "cygwin" ]]; then
 		if [ -n "${JAVA_HOME+x}" ]; then
 			removeFromPath $JAVA_HOME
 		fi
-		export JAVA_HOME="/cygdrive/c/Program\ Files/Java/$(ls /cygrdrive/c/Program\ Files/Java | grep jdk$@ | sort -rV | head -1)"
+		export JAVA_HOME="/cygdrive/c/Program\ Files/Java/$(ls /cygdrive/c/Program\ Files/Java | grep jdk$@ | sort -rV | head -1)"
 		export PATH=$JAVA_HOME/bin:$PATH
 	fi
 fi
