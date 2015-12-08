@@ -66,7 +66,7 @@ fi
 set -o vi
 
 setjdk 1.8
-PATH="/usr/local/bin:$PATH"
+PATH="~/bin:/usr/local/bin:$PATH"
 export PATH
 alias chrome="open -a \"Google Chrome\""
 alias cl="fc -e -|pbcopy"
@@ -102,7 +102,7 @@ fi
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
 
-export PATH=/usr/local/sbin:$PATH:~/bin
+export PATH=/usr/local/sbin:$PATH
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/Users/e026391/.sdkman"
