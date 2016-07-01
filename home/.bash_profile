@@ -16,7 +16,7 @@ if [[ $platform == "darwin" ]]; then
 	if [ $# -ne 0 ]; then
 		removeFromPath '/System/Library/Frameworks/JavaVM.framework/Home/bin'
 		if [ -n "${JAVA_HOME+x}" ]; then
-			removeFromPath $JAVA_HOME
+			removeFromPath "$JAVA_HOME/bin"
 		fi
 		export JAVA_HOME=`/usr/libexec/java_home -v $@`
 		export PATH=$JAVA_HOME/bin:$PATH
@@ -25,7 +25,7 @@ elif [[ $platform == "cygwin" ]]; then
 	if [ $# -ne 0 ]; then
 		removeFromPath '/cygdrive/c/ProgramData/Oracle/Java/javapath'
 		if [ -n "${JAVA_HOME+x}" ]; then
-			removeFromPath $JAVA_HOME
+			removeFromPath "$JAVA_HOME/bin"
 		fi
 		export JAVA_HOME="/cygdrive/c/Program Files/Java/$(ls /cygdrive/c/Program\ Files/Java | grep jdk$@ | sort -rV | head -1)"
 		export PATH=$JAVA_HOME/bin:$PATH
@@ -34,14 +34,14 @@ fi
 }
 
 function removeFromPath() {
-export PATH=$(echo $PATH | sed -E -e "s;:$1;;" -e "s;$1:?;;")
+	export PATH=$(echo $PATH | sed -E -e "s;:$1;;" -e "s;$1:?;;")
 }
 
 function dockerInit() {
 docker-machine start default
 eval "$(docker-machine env default)"
-sudo sh -c 'echo "nameserver 172.17.42.1" >> /etc/resolv.conf' 
-sudo route add -net 172.17.42 192.168.59.103
+#sudo sh -c 'echo "nameserver 172.17.42.1" >> /etc/resolv.conf' 
+#sudo route add -net 172.17.42 192.168.59.103
 }
 
 function startMongo() {
@@ -63,10 +63,13 @@ function startEclim21() {
 if [ -f ~/.bash.local ]; then
 	source ~/.bash.local
 fi
-set -o vi
+if [ -f ~/.bash_aliases ]; then
+	source ~/.bash_aliases
+fi
+#set -o vi
 
 setjdk 1.8
-PATH="~/bin:/usr/local/bin:$PATH"
+PATH="~/bin:~/.vim/tools:/usr/local/bin:$PATH"
 export PATH
 alias chrome="open -a \"Google Chrome\""
 alias cl="fc -e -|pbcopy"
@@ -80,8 +83,6 @@ alias ltr='ls -Art1 && echo "------Newest--"'
 alias open_ports="for port in `netstat -p tcp -na|grep '*.\d' | awk '{print $4}' | cut -f2 -d. `; do sudo lsof -P -i tcp | grep -i tcp | grep \":\$port \"; done" 
 # mute the system volume
 alias stfu="osascript -e 'set volume output muted true'"
-export DOCKER_HOST=tcp://192.168.59.103:2375
-export KUBERNETES_PROVIDER=vagrant
 
 function parse_git_dirty {
 [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]] && echo "*"
@@ -104,7 +105,19 @@ source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
 
 export PATH=/usr/local/sbin:$PATH
 
+dockerInit
+
+# add this configuration to ~/.bashrc
+export HH_CONFIG=hicolor         # get more colors
+shopt -s histappend              # append new history items to .bash_history
+export HISTCONTROL=ignorespace   # leading space hides commands from history
+export HISTFILESIZE=10000        # increase history file size (default is 500)
+export HISTSIZE=${HISTFILESIZE}  # increase history size (default is 500)
+export PROMPT_COMMAND="history -a; history -n; ${PROMPT_COMMAND}"   # mem/file sync
+# if this is interactive shell, then bind hh to Ctrl-r (for Vi mode check doc)
+if [[ $- =~ .*i.* ]]; then bind '"\C-r": "\C-a hh \C-j"'; fi
+
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="/Users/e026391/.sdkman"
-[[ -s "/Users/e026391/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/e026391/.sdkman/bin/sdkman-init.sh"
+export SDKMAN_DIR="/Users/$USER/.sdkman"
+[[ -s "/Users/$USER/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/$USER/.sdkman/bin/sdkman-init.sh"
 

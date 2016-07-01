@@ -8,8 +8,8 @@ source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
 export PATH="/usr/local/heroku/bin:$PATH"
 
 
-
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/Users/e026391/.sdkman"
 [[ -s "/Users/e026391/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/e026391/.sdkman/bin/sdkman-init.sh"
+
 
