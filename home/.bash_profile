@@ -11,6 +11,8 @@ elif [[ "$unamestr" =~ 'CYGWIN' ]]; then
 	platform='cygwin'
 fi
 
+export EVENT_NOKQUEUE=1
+
 function setjdk() {
 if [[ $platform == "darwin" ]]; then
 	if [ $# -ne 0 ]; then
@@ -35,13 +37,6 @@ fi
 
 function removeFromPath() {
 	export PATH=$(echo $PATH | sed -E -e "s;:$1;;" -e "s;$1:?;;")
-}
-
-function dockerInit() {
-docker-machine start default
-eval "$(docker-machine env default)"
-#sudo sh -c 'echo "nameserver 172.17.42.1" >> /etc/resolv.conf' 
-#sudo route add -net 172.17.42 192.168.59.103
 }
 
 function startMongo() {
@@ -90,7 +85,6 @@ function parse_git_dirty {
 function parse_git_branch {
 git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/[\1$(parse_git_dirty)]/"
 }
-powerline-daemon -q
 POWERLINE_BASH_CONTINUATION=1
 POWERLINE_BASH_SELECT=1
 source /usr/local/lib/python2.7/site-packages/powerline/bindings/bash/powerline.sh
@@ -105,7 +99,7 @@ source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
 
 export PATH=/usr/local/sbin:$PATH
 
-dockerInit
+complete -C aws_completer aws
 
 # add this configuration to ~/.bashrc
 export HH_CONFIG=hicolor         # get more colors
